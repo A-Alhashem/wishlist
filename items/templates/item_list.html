@@ -1,22 +1,62 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search Items" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+<form action="{% url 'item-list' %}" class="form-inline my-2 my-lg-0">
+		<input class="form-control mr-sm-2" type="search" name="q" placeholder="Search Items" aria-label="Search" value="{{request.GET.q}}">
+		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 </form>
+
+
 <div class="row">
 {% for item in items %}
-<div class="col-sm-4 py-2">
-        <div class="card h-100">
-            <img class="card-img-top" height="55%" src="{{item.image.url}}" alt="Card image cap">
-            <div class="card-body bg-light">
-                <h3 class="card-title">{{item.name}}</h3>
-                <a href="{% url 'item-detail' item.id %}" class="btn btn-outline-dark">More</a>
-            </div>
-        </div>
-    </div>
+	<div class="col-sm-4 py-2">
+		<div class="card h-100">
+			{% if item.image %}
+			<img class="card-img-top" height="55%" src="{{item.image.url}}" alt="Card image cap">
+			{% endif %}
+			<div class="card-body bg-light">
+				<h3 class="card-title">{{item.name}}</h3>
+				<a href="{% url 'item-detail' item.id %}" class="btn btn-outline-dark">More</a>
+
+
+				<button class="btn btn-light"><i id="wish-{{item.id}}" onclick="wish({{item.id}})" class="fas fa-star {% if item in favs %}text-warning{% endif %}"></i></button>
+			</div>
+		</div>
+	</div>
 
 {% endfor %}
 </div>
+
+
+
+<script>
+
+  function wish(id) {
+	var star_id = "#wish-"+id;
+
+	$.ajax(
+		{
+			type:'GET',
+			url: "/items/"+id+"/wish/",
+			error: function(){
+				alert('Error');
+			},
+			success: function(data){
+				console.log(data) 
+				if(data.action === "favorite"){
+				  $(star_id).addClass('text-warning');
+				}
+
+				else{
+				  $(star_id).removeClass('text-warning');
+				}
+			},
+		}
+	);
+}
+
+</script>
+
+
+
 {% endblock%}

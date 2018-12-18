@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<form action="{% url 'item-wishlist' %}">
+  <div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Search Wishlist" aria-label="Search" name="q" value="{{request.GET.q}}">
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary" type="submit">Search</button>
+    </div>
+  </div>
+</form>
+<div class="row">
+    {% for item in my_wishlist %}
+    <div class="col-md-4">
+        <div class="card my-card">
+          {% if item.item.image %}
+            <img class="card-img-top" src="{{item.item.image.url}}" alt="Hey Noob, look at me...">
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title">{{item.item.name}}</h5>
+            <p class="card-text">{{item.item.description|truncatechars:25}}</p>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item text-center">
+                <a href="{% url 'item-detail' item.item.id %}" class="btn btn-outline-dark">View</a>
+            </li>
+          </ul>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

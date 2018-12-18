@@ -23,6 +23,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('items/list/', views.item_list, name='item-list'),
     path('items/detail/<int:item_id>/', views.item_detail, name='item-detail'),
+    path('items/<int:item_id>/wish/', views.favoriting_item, name='item-wish'),
+
+    path('user/wishlist/', views.wishlist, name='item-wishlist'),
 
     path('user/register/', views.user_register, name='user-register'),
     path('user/login/', views.user_login, name='user-login'),
